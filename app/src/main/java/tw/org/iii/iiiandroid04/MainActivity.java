@@ -1,5 +1,6 @@
 package tw.org.iii.iiiandroid04;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private int dig = 3;
     private EditText input;
     private TextView log;
+    private int counter; //預設為0
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +44,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void guess(View view) {
+        counter++;
         String strInput= input.getText().toString();
         String result = checkAB(strInput);
         log.append(strInput + "=>" + result + "\n");
+        //獲勝條件
+        if (result.equals(dig + "A0B")) { //字串內容必須用equals比對 ==是比較物件
+            showDialog(true);
+        }
+        // 失敗條件
+        else if (counter == 10) {
+            showDialog(false);
+        }
         input.setText("");
+    }
+
+    private void showDialog(boolean isWinner){
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle(isWinner?"WINNER":"Loser")
+                .setMessage(isWinner?"恭喜老爺":"謎底是"+answer)
+                .create();
+        /*
+        builder.setTitle("Title")
+        builder.setMessage("");
+        alterDialog = builder.create();
+        */
+
+        alertDialog.show();
     }
 
     public void newGame(View view) {
