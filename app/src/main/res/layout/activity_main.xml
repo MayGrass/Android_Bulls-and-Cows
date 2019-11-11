@@ -74,6 +74,9 @@
         android:layout_below="@id/top"
         android:layout_above="@id/bottom"
         android:background="#ff0"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#00f"
         />
 
 
