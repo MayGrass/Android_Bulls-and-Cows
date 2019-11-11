@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,17 +21,16 @@ public class MainActivity extends AppCompatActivity {
 
     //產生答案
     private String createAnswer(int dig) {
-        HashSet<Integer> ans = new HashSet<>();
-        while (ans.size() < dig) {
-            ans.add((int) (Math.random() * 10));
-        }
+        LinkedList<Integer> list = new LinkedList<>(); //LinkedList類似一個陣列
+        for (int i=0; i<10; i++) list.add(i); //新增0~9
+        Collections.shuffle(list); //shuffle 洗牌
+        //建一個StringBuffer把list的物件全部存成一個字串
         StringBuffer sb = new StringBuffer();
-        for (Integer i : ans) {
-            sb.append(i);
+        for (int i=0; i<dig; i++) {
+            sb.append(list.get(i));
         }
-
-        Log.v("DCH", sb.toString());
-        return "sb";
+        Log.v("DCH",sb.toString());
+        return sb.toString();
     }
 
     public void guess(View view) {
