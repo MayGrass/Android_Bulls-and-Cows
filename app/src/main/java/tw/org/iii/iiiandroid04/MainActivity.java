@@ -3,6 +3,7 @@ package tw.org.iii.iiiandroid04;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,16 +54,25 @@ public class MainActivity extends AppCompatActivity {
             showDialog(true);
         }
         // 失敗條件
-        else if (counter == 10) {
+        else if (counter == 5) {
             showDialog(false);
         }
         input.setText("");
     }
 
+    //新增提示訊息
     private void showDialog(boolean isWinner){
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle(isWinner?"WINNER":"Loser")
                 .setMessage(isWinner?"恭喜老爺":"謎底是"+answer)
+                //新增按鈕 按完開新局
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        newGame(null);
+                    }
+                })
+                .setCancelable(false) //不能取消，只能按OK，按其他地方沒反應
                 .create();
         /*
         builder.setTitle("Title")
@@ -74,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newGame(View view) {
+        Log.v("DCH", "new game");
     }
 
     public void setting(View view) {
