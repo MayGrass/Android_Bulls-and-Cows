@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="New"
+            android:text="開新局"
             android:textAllCaps="false"
             android:onClick="newGame"
             />
@@ -53,7 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Setting"
+            android:text="設定"
             android:textAllCaps="false"
             android:onClick="setting"
             />
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Exit"
+            android:text="離開"
             android:textAllCaps="false"
             android:onClick="exit"
             />
@@ -73,10 +73,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/top"
         android:layout_above="@id/bottom"
-        android:background="#ff0"
+        android:background="#516307"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#00f"
+        android:textColor="#FFFFFF"
         />
 
 

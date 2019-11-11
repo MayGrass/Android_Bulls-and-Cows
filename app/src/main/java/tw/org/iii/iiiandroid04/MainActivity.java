@@ -3,6 +3,7 @@ package tw.org.iii.iiiandroid04;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView log;
     private int counter; //預設為0
     private long lastTime = 0;
+    private int temp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,17 +51,25 @@ public class MainActivity extends AppCompatActivity {
     public void guess(View view) {
         counter++;
         String strInput= input.getText().toString();
+        if (!isRIghtNumber(strInput)) {
+            return;
+        }
         String result = checkAB(strInput);
-        log.append(strInput + "=>" + result + "\n");
+        log.append(counter + ":" + strInput + "=>" + result + "\n");
         //獲勝條件
         if (result.equals(dig + "A0B")) { //字串內容必須用equals比對 ==是比較物件
             showDialog(true);
         }
         // 失敗條件
-        else if (counter == 5) {
+        else if (counter == 10) {
             showDialog(false);
         }
         input.setText("");
+    }
+
+    //確認輸入是否符合規則，數字與位數
+    private boolean isRIghtNumber(String g) {
+        return g.matches("^[0-9]{"+dig+"}");
     }
 
     //新增提示訊息
@@ -92,6 +102,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setting(View view) {
+        String[] items = {"3", "4", "5", "6"};
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("要猜幾個數字呢?")
+                .setSingleChoiceItems(items,dig -3, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        temp = which;
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dig = temp + 3;
+                        newGame(null);
+                    }
+                })
+                .create();
+        alertDialog.show();
     }
 
     //觀察用，實際上會自動執行destroy，忘記可以去看生命週期
@@ -113,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         //如果三秒內再按一次就離開
         if (System.currentTimeMillis() - lastTime > 3*1000) {
-            lastTime = System.currentTimeMillis(); //
+            lastTime = System.currentTimeMillis();
             Toast.makeText(this, "再按一次返回離開", Toast.LENGTH_SHORT).show(); //在下方出現短暫的提示訊息
         }
         else
