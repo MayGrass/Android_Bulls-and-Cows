@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText input;
     private TextView log;
     private int counter; //預設為0
+    private long lastTime = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,33 +66,74 @@ public class MainActivity extends AppCompatActivity {
     private void showDialog(boolean isWinner){
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle(isWinner?"WINNER":"Loser")
-                .setMessage(isWinner?"恭喜老爺":"謎底是"+answer)
+                .setMessage(isWinner?"恭喜猜對":"答案是"+answer)
                 //新增按鈕 按完開新局
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("重開新局", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         newGame(null);
                     }
                 })
-                .setCancelable(false) //不能取消，只能按OK，按其他地方沒反應
+                .setCancelable(false) //不能取消，強迫按按鈕，按其他地方沒反應
                 .create();
         /*
         builder.setTitle("Title")
         builder.setMessage("");
         alterDialog = builder.create();
         */
-
         alertDialog.show();
     }
 
     public void newGame(View view) {
-        Log.v("DCH", "new game");
+        counter = 0;
+        input.setText("");
+        log.setText("");
+        answer = createAnswer(dig);
     }
 
     public void setting(View view) {
     }
 
+    //觀察用，實際上會自動執行destroy，忘記可以去看生命週期
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v("DCH", "onDestroy");
+    }
+
+    //finish()實際上不用特別寫一個
+    @Override
+    public void finish() {
+        super.finish();
+        Log.v("DCH", "finish");
+    }
+
+    //控制按返回鍵的動作
+    @Override
+    public void onBackPressed() {
+        //如果三秒內再按一次就離開
+        if (System.currentTimeMillis() - lastTime > 3*1000) {
+            lastTime = System.currentTimeMillis(); //
+            Toast.makeText(this, "再按一次返回離開", Toast.LENGTH_SHORT).show(); //在下方出現短暫的提示訊息
+        }
+        else
+            super.onBackPressed();
+    }
+
     public void exit(View view) {
+        //確認是否離開的訊息
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setMessage("確定要離開嗎?")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        alertDialog.show();
     }
 
     private String checkAB(String guess) {
